@@ -11,6 +11,102 @@ class DishesController {
       category
     });
 
+    const ingredientsInsert = ingredients.map(ingredient => {
+      return {
+        name: ingredient,
+        dish_id
+      };
+    });
+
+    await knex('ingredients').insert(ingredientsInsert);
+
+    return response.json();
+  }
+
+  async show(request, response) {
+    const { id } = request.params;
+
+    const dish = await knex('dishes').where({ id }).first();
+    const ingredients = await knex('ingredients')
+      .where({ dish_id: id })
+      .orderBy('name');
+
+    return response.json({
+      ...dish,
+      ingredients
+    });
+  }
+
+  async index(request, response) {
+    const { title, ingredients } = request.query;
+
+    let dishes;
+
+    if (ingredients) {
+      const filterIngredients = ingredients.split(',').map(tag => tag.trim());
+
+      dishes = await knex('ingredients')
+        .select([
+          'dishes.id',
+          'dishes.title',
+          'dishes.description',
+          'dishes.price',
+          'dishes.img'
+        ])
+        .whereLike('dishes.title', `%${title}%`)
+        .whereIn('name', filterIngredients)
+        .innerJoin('dishes', 'dishes.id', 'ingredients.dishes_id')
+        .groupBy('dishes.id')
+        .orderBy('dishes.title');
+    } else {
+      dishes = await knex('dishes')
+        .whereLike('title', `%${title}%`)
+        .orderBy('title');
+    }
+
+    const listIngredients = await knex('ingredients');
+
+    const dishesWithIngredients = dishes.map(dish => {
+      const dishIngredients = listIngredients.filter(
+        ingredient => ingredient.dish_id === dish.id
+      );
+
+      return {
+        ...dish,
+        ingredients: dishIngredients
+      };
+    });
+
+    return response.json(dishesWithIngredients);
+  }
+
+  async update(request, response) {
+    const { title, description, ingredients, price } = request.body;
+    const { id } = request.params;
+
+    const dish = await knex('dishes').where({ id }).first();
+
+    dish.title = title ?? dish.title;
+    dish.description = description ?? dish.description;
+    dish.price = price ?? dish.price;
+
+    const ingredientsInsert = ingredients.map(name => ({
+      name,
+      dish_id: dish.id
+    }));
+
+    await knex('dishes').where({ id }).update(dish);
+    await knex('ingredients').where({ dish_id: id }).delete();
+    await knex('ingredients').insert(ingredientsInsert);
+
+    return response.json();
+  }
+
+  async delete(request, response) {
+    const { id } = request.params;
+
+    await knex('dishes').where({ id }).delete();
+
     return response.json();
   }
 }

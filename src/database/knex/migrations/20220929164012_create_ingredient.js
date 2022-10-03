@@ -3,9 +3,9 @@ exports.up = knex =>
     table.increments('id');
     table.text('name').notNullable();
     table
-      .integer('plates_id')
+      .integer('dish_id')
       .references('id')
-      .inTable('plates')
+      .inTable('dishes')
       .onDelete('CASCADE');
   });
 
