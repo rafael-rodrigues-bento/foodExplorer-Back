@@ -1,22 +1,41 @@
 const knex = require('../database/knex');
+const DiskStorage = require('../providers/DiskStorage');
 
 class DishesController {
   async create(request, response) {
     const { title, description, category, ingredients, price } = request.body;
 
+    const imgFileName = request.file.filename;
+    const diskStorage = new DiskStorage();
+
+    const filename = await diskStorage.saveFile(imgFileName);
+
     const dish_id = await knex('dishes').insert({
+      img: filename,
       title,
       description,
       price,
       category
     });
 
-    const ingredientsInsert = ingredients.map(ingredient => {
-      return {
-        name: ingredient,
+    const hasOnlyOneIngredient = typeof ingredients === 'string';
+
+    let ingredientsInsert;
+    if (hasOnlyOneIngredient) {
+      ingredientsInsert = {
+        name: ingredients,
         dish_id
       };
-    });
+    } else if (ingredients.length > 1) {
+      ingredientsInsert = ingredients.map(ingredient => {
+        return {
+          name: ingredient,
+          dish_id
+        };
+      });
+    } else {
+      return;
+    }
 
     await knex('ingredients').insert(ingredientsInsert);
 
