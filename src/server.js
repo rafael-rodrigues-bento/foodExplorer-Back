@@ -1,6 +1,6 @@
 require('express-async-errors');
 const express = require('express');
-
+const cors = require('cors');
 const database = require('./database/sqlite');
 
 const AppError = require('./utils/AppError');
@@ -9,6 +9,7 @@ const app = express();
 
 database();
 
+app.use(cors());
 app.use(express.json());
 
 app.use(routes);
