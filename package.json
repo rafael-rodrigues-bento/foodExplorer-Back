@@ -7,12 +7,14 @@
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "dev": "nodemon ./src/server.js",
     "migrate": "knex migrate:latest",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Rafael Rodrigues Bento",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^29.1.2",
     "nodemon": "^2.0.20"
   },
   "dependencies": {
