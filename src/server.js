@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const database = require('./database/sqlite');
 
+const uploadConfig = require('./configs/upload');
+
 const AppError = require('./utils/AppError');
 const routes = require('./routes');
 const app = express();
@@ -11,6 +13,8 @@ database();
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER));
 
 app.use(routes);
 

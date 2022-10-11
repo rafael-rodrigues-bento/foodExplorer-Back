@@ -103,11 +103,17 @@ class DishesController {
     const { title, description, ingredients, price } = request.body;
     const { id } = request.params;
 
+    const imgFileName = request.file.filename;
+    const diskStorage = new DiskStorage();
+
+    const filename = await diskStorage.saveFile(imgFileName);
+
     const dish = await knex('dishes').where({ id }).first();
 
     dish.title = title ?? dish.title;
     dish.description = description ?? dish.description;
     dish.price = price ?? dish.price;
+    dish.img = filename ?? dish.img;
 
     const ingredientsInsert = ingredients.map(name => ({
       name,
