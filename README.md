@@ -13,7 +13,7 @@ Projeto final desenvolvido no programa Explorer da Rocketseat
 A aplicação  é um cardápio digital para um restaurante fictício, conhecido como foodExplorer.
 
 
-## Tecnlogias utilizadaz
+## Tecnlogias utilizadas
 
 - <a target="_blank" href="https://nodejs.org/en/">NodeJS</a>
 - <a target="_blank" href="https://expressjs.com/">Express</a>
@@ -24,15 +24,14 @@ A aplicação  é um cardápio digital para um restaurante fictício, conhecido 
 
 ## Funcionalidades
 
-- Os usuários deverão se autenticar para entrar na aplicação através da tela de login, você pode aplicar o que aprendeu nas aulas de autenticação JWT. A autenticação deve ser validada com senha.
+- Autenticação JWT
 
-- O admin irá fazer upload de imagens para cadastrar os pratos.
+- Upload de imagens
 
-- Os dados do admin, do restaurante e dos usuários serão armazenados em um banco de dados.
+- Persitência de dados no localstorage
 
-- Possibilidade de fazer uma busca pelo nome do prato, pelos ingredientes ou por prato favorito
+- API Rest (Própria)
 
-- É essencial que a sua interface consuma a sua própria API.
 ## Rodando localmente
 
 Clone o projeto
